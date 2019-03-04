@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -46,10 +47,11 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processDesign(@Valid Taco taco, Errors errors){
-        if(errors.hasErrors()) return "design";
-
-        log.info("Processing design: " + taco);
+    public String processDesign(@Valid @ModelAttribute("design") Taco design, Errors errors){
+        if(errors.hasErrors()){
+            return "design";
+        }
+        log.info("Processing design: " + design);
         return "redirect:/orders/current";
     }
 
