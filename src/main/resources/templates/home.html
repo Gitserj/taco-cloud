@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Taco Cloud</title>
+    <link rel="stylesheet" th:href="@{/styles.css}" />
 </head>
 <body>
     <h1>Welcome to...</h1>
     <img th:src="@{/images/TacoCloud.jpg}"/>
 
     <br/>
-    <a th:href="@{/design}">Make a taco</a>
+    <a class="button" th:href="@{/design}">Make a taco</a>
 </body>
 </html>

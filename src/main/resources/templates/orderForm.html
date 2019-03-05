@@ -11,7 +11,7 @@
         <h1>Order your taco creations!</h1>
 
         <img th:src="@{/images/TacoCloud.jpg}" alt="">
-        <a th:href="@{/design}" id="another">Design another taco</a>
+        <a class="button" th:href="@{/design}" id="another">Design another taco</a>
 
         <div th:if="${#fields.hasErrors()}">
             <span class="validationError">
@@ -79,7 +79,7 @@
               th:errors="*{ccCVV}">Error</span>
         <br/>
 
-        <input type="submit" value="Submit order"/>
+        <input class="button" type="submit" value="Submit order"/>
 
     </form>
 </body>
