@@ -13,7 +13,7 @@ public class Taco {
     @Size(min = 5, message = "Минимальная длина имени - 5 символов")
     private String name;
 
-    @Size(min = 1, message = "Выберите хотя-бы 1 ингредиент")
+    @NotNull(message = "Выберите хотя-бы 1 ингредиент")
     private List<String> ingredients;
 
 }

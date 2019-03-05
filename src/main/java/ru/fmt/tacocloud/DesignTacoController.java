@@ -22,8 +22,8 @@ import javax.validation.Valid;
 @RequestMapping("/design")
 public class DesignTacoController {
 
-    @GetMapping
-    public String showDesignForm(Model model){
+    @ModelAttribute
+    public void addIngredientsToModel(Model model) {
         List<Ingredient> ingredients = Arrays.asList(
                 new Ingredient("FLTO", "Flour Tortilla", Type.WRAP),
                 new Ingredient("COTO", "Corn Tortilla", Type.WRAP),
@@ -37,20 +37,26 @@ public class DesignTacoController {
                 new Ingredient("SRCR", "Sour Cream", Type.SAUCE)
         );
 
-        Type[] types = Type.values();
+        Type[] types = Ingredient.Type.values();
         for (Type type : types) {
-            model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
+            model.addAttribute(type.toString().toLowerCase(),
+                    filterByType(ingredients, type));
         }
+    }
 
+    @GetMapping
+    public String showDesignForm(Model model){
         model.addAttribute("design", new Taco());
         return "design";
     }
 
     @PostMapping
-    public String processDesign(@Valid @ModelAttribute("design") Taco design, Errors errors){
+    public String processDesign(@Valid @ModelAttribute("design") Taco design, Errors errors, Model model){
         if(errors.hasErrors()){
+            log.info("Model state after errors: " + model);
             return "design";
         }
+        log.info("Model state without errors: " + model);
         log.info("Processing design: " + design);
         return "redirect:/orders/current";
     }
