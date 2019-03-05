@@ -1,4 +1,4 @@
-package ru.fmt.tacocloud;
+package ru.fmt.tacocloud.web;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -13,7 +13,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ru.fmt.tacocloud.Ingredient;
 import ru.fmt.tacocloud.Ingredient.Type;
+import ru.fmt.tacocloud.Taco;
 
 import javax.validation.Valid;
 
