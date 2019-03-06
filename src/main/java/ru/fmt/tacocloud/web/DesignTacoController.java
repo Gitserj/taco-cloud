@@ -14,8 +14,10 @@ import java.util.stream.Collectors;
 
 import ru.fmt.tacocloud.Ingredient;
 import ru.fmt.tacocloud.Ingredient.Type;
+import ru.fmt.tacocloud.Order;
 import ru.fmt.tacocloud.Taco;
 import ru.fmt.tacocloud.data.IngredientRepository;
+import ru.fmt.tacocloud.data.TacoRepository;
 
 import javax.validation.Valid;
 
@@ -26,40 +28,58 @@ import javax.validation.Valid;
 public class DesignTacoController {
 
     private final IngredientRepository ingredientRepo;
+    private TacoRepository designRepo;
 
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepo){
+    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository designRepo){
         this.ingredientRepo = ingredientRepo;
+        this.designRepo = designRepo;
     }
 
-    @ModelAttribute
-    public void addIngredientsToModel(Model model) {
-        List<Ingredient> ingredients = new ArrayList<>();
+    @ModelAttribute(name = "order")
+    public Order order() {
+        return new Order();
+    }
+
+    @ModelAttribute(name = "design")
+    public Taco design() {
+        return new Taco();
+    }
+
+//    @ModelAttribute
+//    public void addIngredientsToModel(Model model) {
+//
+//    }
+
+    @GetMapping
+    public String showDesignForm(Model model){
+
+        List<Ingredient> ingredients = new ArrayList<Ingredient>();
         ingredientRepo.findAll().forEach(i -> ingredients.add(i));
 
         Type[] types = Ingredient.Type.values();
         for (Type type : types) {
-            model.addAttribute(
-                    type.toString().toLowerCase(),
-                    filterByType(ingredients, type)
-            );
+            model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
         }
-    }
-
-    @GetMapping
-    public String showDesignForm(Model model){
-        model.addAttribute("design", new Taco());
         return "design";
     }
 
     @PostMapping
-    public String processDesign(@Valid @ModelAttribute("design") Taco design, Errors errors, Model model){
+    public String processDesign(
+            @Valid Taco design,
+            @ModelAttribute Order order,
+            Errors errors){
+        log.info("{Процессинг десигн} - До проверки на ошибку");
+
         if(errors.hasErrors()){
-            log.info("Model state after errors: " + model);
+            log.info("{Процессинг десигн} - Внутри проверки на ошибку");
             return "design";
         }
-        log.info("Model state without errors: " + model);
-        log.info("Processing design: " + design);
+
+        log.info("{Процессинг десигн} - После проверки на ошибку");
+        Taco saved = designRepo.save(design);
+        order.addDesign(saved);
+
         return "redirect:/orders/current";
     }
 
